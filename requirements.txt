@@ -1,0 +1,10 @@
+beautifulsoup4 @ file:///C:/b/abs_d5wytg_p0w/croot/beautifulsoup4-split_1718029833749/work
+Brotli @ file:///C:/b/abs_3d36mno480/croot/brotli-split_1714483178642/work
+certifi @ file:///C:/b/abs_1fw_exq1si/croot/certifi_1725551736618/work/certifi
+charset-normalizer @ file:///croot/charset-normalizer_1721748349566/work
+idna @ file:///C:/b/abs_aad84bnnw5/croot/idna_1714398896795/work
+PySocks @ file:///C:/ci/pysocks_1605307512533/work
+requests @ file:///C:/b/abs_c3508vg8ez/croot/requests_1731000584867/work
+soupsieve @ file:///C:/b/abs_bbsvy9t4pl/croot/soupsieve_1696347611357/work
+urllib3 @ file:///C:/b/abs_9a_f8h_bn2/croot/urllib3_1727769836930/work
+win-inet-pton @ file:///C:/ci/win_inet_pton_1605306162074/work
