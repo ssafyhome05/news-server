@@ -1,10 +1,10 @@
 ## 1. 환경 설정
 
->[!note] 주의
+> 🔴 주의
 > 파이썬 패키지 관리시스템 `anaconda`가 설치되어 있어야 합니다.
 
 ``` bash
-git clone {현재 깃 주소}
+git clone https://github.com/ssafyhome05/news-server.git
 cd news-server
 conda create -n zipchack python=3.9 -y
 conda activate zipchack
