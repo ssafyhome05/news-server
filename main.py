@@ -1,8 +1,39 @@
 # main.py
 import requests
 from fastapi import FastAPI
+from fastapi import Depends
 from bs4 import BeautifulSoup
 from pydantic import BaseModel, Field
+
+
+# database
+
+#custom
+from database import engineconn
+from models import News
+
+# SQLAlchemy Setup
+engine = engineconn()
+
+def get_db():
+    db = engine.sessionmaker()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+# database dto 
+class NewsAdd(BaseModel):
+    dong_code   : str
+    title       : str
+    url         : str
+    city_name   : str
+    ref         : str
+    img         : str
+
+
+
 
 
 
@@ -54,6 +85,57 @@ class NewsResponse(BaseModel):
             }
         }
 
+
+# Create a new user
+@app.post("/addNewsList", tags=["News"])
+async def addNewsList(db = Depends(get_db)):
+    
+    search = "https://land.naver.com/news/region.naver?city_no=1100000000&dvsn_no="
+    response = requests.get(search)
+    soup = BeautifulSoup(response.text, "html.parser")
+    dong_codes = soup.select(".area") # 결과는 리스트
+
+    links = soup.select(".category_list li a:nth-of-type(2)") 
+    news_list = []
+
+    idx = 0
+    for link, code in zip(links, dong_codes):
+        city_name = code.text[1:-1]
+        dong_code = code.attrs['href'].split("dvsn_no")[1][1:]
+        url = link.attrs['href']
+
+        title_soup = BeautifulSoup(requests.get(url).text, "html.parser")
+        title = title_soup.select('#title_area span')[0].text
+        ref = title_soup.select('.ofhd_float_title_text_press')[0].text
+        if title_soup.select('#img1')==[]: # 이미지 없는 경우 건너뛰기
+            idx+=1
+            continue;    
+        img = title_soup.select('#img1')[0].attrs['data-src']
+
+        news_list.append(
+            News(
+                dong_code = dong_code,
+                title = title,
+                ref   = ref,
+                url = url,
+                city_name = city_name,
+                img = img
+            )
+        )
+        
+        if idx==3: break
+        idx+=1
+
+    db.add_all(news_list)
+    db.commit()
+    return 
+
+
+
+
+
+
+
 # 기본 경로에 대한 get 요청 처리
 @app.get("/news", tags=["News"], response_model=NewsResponse)
 def getNewsList():
@@ -78,6 +160,13 @@ def getNewsList():
 
         data = {"dong_code":dong_code, "title":title,"url":url,"city_name":city_name, "ref":ref, "img":img}
         response["news"].append(data)
+        
+        news = News(name=title, email=url)
+        db.add(news)
+        
+        
+        
+        
         if idx==3: break
         idx+=1
 
