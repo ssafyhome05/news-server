@@ -161,12 +161,6 @@ def getNewsList():
         data = {"dong_code":dong_code, "title":title,"url":url,"city_name":city_name, "ref":ref, "img":img}
         response["news"].append(data)
         
-        news = News(name=title, email=url)
-        db.add(news)
-        
-        
-        
-        
         if idx==3: break
         idx+=1
 
